@@ -5,6 +5,6 @@ mappingExamples is a group of examples of how interact(map) with Futures in Play
 
 All code is in:
 
-´´´
+```
 app/contrllers/Application.scala
-´´´
+```
