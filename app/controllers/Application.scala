@@ -1,11 +1,10 @@
 package controllers
 
-import akka.actor.Status.Success
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import scala.util.{Try, Failure}
+import scala.util.Try
 
 object Application extends Controller {
 
@@ -48,9 +47,9 @@ object Application extends Controller {
 
   def withError: Future[Try[Int]] = {
     Future {
-      Try (
+      Try(
         2 / 0
-      ).recover{
+      ).recover {
         case e => 0
       }
     }
@@ -108,12 +107,12 @@ object Application extends Controller {
 
   // Try
 
-  def index8 = Action.async{
+  def index8 = Action.async {
     withError
       .map(_.getOrElse(0))
       .map(_.toString)
       .map(Ok(_))
-    }
+  }
 
 
 }
