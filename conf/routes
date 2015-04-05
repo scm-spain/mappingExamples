@@ -9,4 +9,5 @@ GET     /3                           controllers.Application.index3
 GET     /4                           controllers.Application.index4
 GET     /5                           controllers.Application.index5
 GET     /6                           controllers.Application.index6
-#GET     /7                           controllers.Application.index7
+GET     /7                           controllers.Application.index7
+GET     /8                           controllers.Application.index8

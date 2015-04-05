@@ -1,9 +1,11 @@
 package controllers
 
+import akka.actor.Status.Success
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Try, Failure}
 
 object Application extends Controller {
 
@@ -34,7 +36,7 @@ object Application extends Controller {
     Some(2)
   }
 
-  def withOptionFail: Option[Int] = {
+  def withOptionNone: Option[Int] = {
     Thread.sleep(200)
     None
   }
@@ -42,6 +44,16 @@ object Application extends Controller {
   def withFutureOfOption: Future[Option[Int]] = Future {
     Thread.sleep(200)
     Some(2)
+  }
+
+  def withError: Future[Try[Int]] = {
+    Future {
+      Try (
+        2 / 0
+      ).recover{
+        case e => 0
+      }
+    }
   }
 
   //Simple
@@ -84,7 +96,7 @@ object Application extends Controller {
   }
 
   def index6 = Action {
-    Ok(withOptionFail.map(_.toString).getOrElse("fail"))
+    Ok(withOptionNone.map(_.toString).getOrElse("fail"))
   }
 
   def index7 = Action.async {
@@ -93,7 +105,15 @@ object Application extends Controller {
       .map(_.toString)
       .map(Ok(_))
   }
-  
+
+  // Try
+
+  def index8 = Action.async{
+    withError
+      .map(_.getOrElse(0))
+      .map(_.toString)
+      .map(Ok(_))
+    }
 
 
 }
