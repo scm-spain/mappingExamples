@@ -45,6 +45,17 @@ object Application extends Controller {
     Some(2)
   }
 
+  def withFutureOfOptionFails:Future[Option[Int]] = {
+    Future {
+      try {
+        Some(2 / 0)
+      }
+      catch {
+        case e => None
+      }
+    }
+  }
+
   def withError: Future[Try[Int]] = {
     Future {
       Try(
@@ -108,11 +119,17 @@ object Application extends Controller {
   // Try
 
   def index8 = Action.async {
-    withError
+    withFutureOfOptionFails
       .map(_.getOrElse(0))
       .map(_.toString)
       .map(Ok(_))
   }
 
+  def index9 = Action.async {
+    withError
+      .map(_.getOrElse(0))
+      .map(_.toString)
+      .map(Ok(_))
+  }
 
 }
