@@ -60,9 +60,7 @@ object Application extends Controller {
     Future {
       Try(
         2 / 0
-      ).recover {
-        case e => 0
-      }
+      )
     }
   }
 
@@ -76,7 +74,7 @@ object Application extends Controller {
 
   def index2 = Action.async {
     withFuture
-      .map(_.toString)
+      .map(c => c.toString)
       .map(Ok(_))
   }
 
@@ -130,6 +128,13 @@ object Application extends Controller {
       .map(_.getOrElse(0))
       .map(_.toString)
       .map(Ok(_))
+  }
+
+  def index10 = Action.async{
+    withError
+    .map(_.map(_.toString))
+    .map(_.getOrElse(0))
+    .map(Ok(_))
   }
 
 }
