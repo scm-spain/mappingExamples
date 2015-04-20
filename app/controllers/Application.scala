@@ -133,7 +133,7 @@ object Application extends Controller {
   def index10 = Action.async{
     withError
     .map(_.map(_.toString))
-    .map(_.getOrElse(0))
+    .map(_.getOrElse("fail"))
     .map(Ok(_))
   }
 
