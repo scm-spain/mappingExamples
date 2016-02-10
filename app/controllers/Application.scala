@@ -10,67 +10,14 @@ object Application extends Controller {
 
   //Methods
 
-  def simple: Int = {
-    Thread.sleep(200)
-    2
-  }
-
-  def withFuture: Future[Int] = Future {
-    Thread.sleep(200)
-    2
-  }
-
-  def withFuture2: Future[Int] = Future {
-    Thread.sleep(200)
-    2
-  }
-
-  def futureWithParam(i: Int): Future[Int] = Future {
-    Thread.sleep(200)
-    i + 2
-  }
-
-  def withOption: Option[Int] = {
-    Thread.sleep(200)
-    Some(2)
-  }
-
-  def withOptionNone: Option[Int] = {
-    Thread.sleep(200)
-    None
-  }
-
-  def withFutureOfOption: Future[Option[Int]] = Future {
-    Thread.sleep(200)
-    Some(2)
-  }
-
-  def withFutureOfOptionFails:Future[Option[Int]] = {
-    Future {
-      try {
-        Some(2 / 0)
-      }
-      catch {
-        case e => None
-      }
-    }
-  }
-
-  def withError: Future[Try[Int]] = {
-    Future {
-      Try(
-        2 / 0
-      )
-    }
-  }
-
-  //Simple
-
   def index = Action {
     Ok(simple.toString)
   }
 
-  //Futures
+  def simple: Int = {
+    Thread.sleep(200)
+    2
+  }
 
   def index2 = Action.async {
     withFuture
@@ -97,14 +44,45 @@ object Application extends Controller {
       .map(Ok(_))
   }
 
-  //Options
+  def withFuture: Future[Int] = Future {
+    Thread.sleep(200)
+    2
+  }
+
+  def futureWithParam(i: Int): Future[Int] = Future {
+    Thread.sleep(200)
+    i + 2
+  }
+
+  def index11 = Action.async {
+    withFuture.flatMap(i => withFuture2).map(v => Ok(v))
+  }
+
+  def withFuture2: Future[Int] = Future {
+    Thread.sleep(200)
+    2
+  }
+
+  //Simple
 
   def index5 = Action {
     Ok(withOption.map(_.toString).getOrElse("fail"))
   }
 
+  //Futures
+
+  def withOption: Option[Int] = {
+    Thread.sleep(200)
+    Some(2)
+  }
+
   def index6 = Action {
     Ok(withOptionNone.map(_.toString).getOrElse("fail"))
+  }
+
+  def withOptionNone: Option[Int] = {
+    Thread.sleep(200)
+    None
   }
 
   def index7 = Action.async {
@@ -114,7 +92,12 @@ object Application extends Controller {
       .map(Ok(_))
   }
 
-  // Try
+  //Options
+
+  def withFutureOfOption: Future[Option[Int]] = Future {
+    Thread.sleep(200)
+    Some(2)
+  }
 
   def index8 = Action.async {
     withFutureOfOptionFails
@@ -123,6 +106,19 @@ object Application extends Controller {
       .map(Ok(_))
   }
 
+  def withFutureOfOptionFails: Future[Option[Int]] = {
+    Future {
+      try {
+        Some(2 / 0)
+      }
+      catch {
+        case e => None
+      }
+    }
+  }
+
+  // Try
+
   def index9 = Action.async {
     withError
       .map(_.getOrElse(0))
@@ -130,11 +126,19 @@ object Application extends Controller {
       .map(Ok(_))
   }
 
-  def index10 = Action.async{
+  def index10 = Action.async {
     withError
-    .map(_.map(_.toString))
-    .map(_.getOrElse("fail"))
-    .map(Ok(_))
+      .map(_.map(_.toString))
+      .map(_.getOrElse("fail"))
+      .map(Ok(_))
+  }
+
+  def withError: Future[Try[Int]] = {
+    Future {
+      Try(
+        2 / 0
+      )
+    }
   }
 
 }
